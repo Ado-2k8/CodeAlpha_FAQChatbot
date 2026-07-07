@@ -1,6 +1,6 @@
 """
-Module de préprocessing NLP pour le chatbot FAQ.
-Utilise NLTK pour : tokenisation, suppression des stopwords, lemmatisation.
+NLP preprocessing module for the FAQ chatbot.
+Uses NLTK for: tokenization, stopword removal, lemmatization.
 """
 import re
 import nltk
@@ -8,7 +8,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
-# S'assure que les ressources NLTK sont disponibles (silencieux si déjà présentes)
+# Make sure NLTK resources are available (silent if already present)
 for pkg in ["punkt", "punkt_tab", "stopwords", "wordnet"]:
     try:
         nltk.data.find(pkg)
@@ -20,7 +20,7 @@ _stop_words = set(stopwords.words("english"))
 
 
 def clean_text(text: str) -> str:
-    """Nettoie le texte : minuscules + suppression de la ponctuation/chiffres isolés."""
+    """Cleans the text: lowercase + removes punctuation/stray digits."""
     text = text.lower()
     text = re.sub(r"[^a-z\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
@@ -29,9 +29,9 @@ def clean_text(text: str) -> str:
 
 def preprocess(text: str) -> str:
     """
-    Pipeline complète de préprocessing NLP :
-    nettoyage -> tokenisation -> suppression stopwords -> lemmatisation.
-    Retourne une chaîne de tokens lemmatisés, prête pour la vectorisation.
+    Full NLP preprocessing pipeline:
+    cleaning -> tokenization -> stopword removal -> lemmatization.
+    Returns a string of lemmatized tokens, ready for vectorization.
     """
     cleaned = clean_text(text)
     tokens = word_tokenize(cleaned)

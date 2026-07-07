@@ -1,7 +1,7 @@
 """
-Moteur du chatbot FAQ.
-Charge les FAQ, les vectorise (TF-IDF) après préprocessing NLP,
-et répond à une question utilisateur via similarité cosinus.
+FAQ chatbot engine.
+Loads the FAQs, vectorizes them (TF-IDF) after NLP preprocessing,
+and answers a user question via cosine similarity.
 """
 import json
 from pathlib import Path
@@ -12,11 +12,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 from preprocessing import preprocess
 
 DEFAULT_FAQ_PATH = Path(__file__).parent / "data" / "faqs.json"
-CONFIDENCE_THRESHOLD = 0.25  # en dessous de ce score, on considère qu'on n'a pas de bonne réponse
+CONFIDENCE_THRESHOLD = 0.25  # below this score, we consider there is no good answer
 
 FALLBACK_ANSWER = (
-    "Je ne suis pas sûr de comprendre votre question. "
-    "Pourriez-vous la reformuler, ou contacter notre support à support@example.com ?"
+    "I'm not sure I understand your question. "
+    "Could you rephrase it, or contact our support at support@example.com?"
 )
 
 
@@ -27,15 +27,15 @@ class FAQChatbot:
         self.questions = [item["question"] for item in self.faqs]
         self.answers = [item["answer"] for item in self.faqs]
 
-        # Préprocessing NLP de toutes les questions FAQ
+        # NLP preprocessing of all FAQ questions
         self._preprocessed_questions = [preprocess(q) for q in self.questions]
 
-        # Deux vectoriseurs combinés pour un matching plus robuste :
-        # - word_vectorizer : capture le sens via les mots/lemmes (précis, mais rigide face aux synonymes)
-        # - char_vectorizer : capture les variantes morphologiques proches
-        #   (ex: "pay" / "payment") via des n-grammes de caractères
-        # Le score final est la moyenne des deux similarités, ce qui réduit
-        # les faux positifs qu'un seul des deux vectoriseurs produirait isolément.
+        # Two combined vectorizers for more robust matching:
+        # - word_vectorizer: captures meaning via words/lemmas (precise, but rigid with synonyms)
+        # - char_vectorizer: captures close morphological variants
+        #   (e.g. "pay" / "payment") via character n-grams
+        # The final score is the average of both similarities, which reduces
+        # false positives that either vectorizer alone would produce.
         self.word_vectorizer = TfidfVectorizer(ngram_range=(1, 2))
         self.word_matrix = self.word_vectorizer.fit_transform(self._preprocessed_questions)
 
@@ -49,11 +49,11 @@ class FAQChatbot:
 
     def get_response(self, user_question: str):
         """
-        Retourne (answer, matched_question, score) pour la question utilisateur.
-        Si aucune correspondance suffisante n'est trouvée, renvoie la réponse par défaut.
+        Returns (answer, matched_question, score) for the user question.
+        If no sufficient match is found, returns the default fallback answer.
         """
         if not user_question or not user_question.strip():
-            return "Veuillez poser une question.", None, 0.0
+            return "Please ask a question.", None, 0.0
 
         processed = preprocess(user_question)
         if not processed:
@@ -79,7 +79,7 @@ class FAQChatbot:
         return 0.5 * word_sims + 0.5 * char_sims
 
     def top_matches(self, user_question: str, k: int = 3):
-        """Retourne les k meilleures correspondances (utile pour debug/tests)."""
+        """Returns the top k matches (useful for debugging/testing)."""
         processed = preprocess(user_question)
         similarities = self._hybrid_similarities(processed)
         top_idx = similarities.argsort()[::-1][:k]
@@ -90,11 +90,11 @@ class FAQChatbot:
 
 
 if __name__ == "__main__":
-    # Mode CLI simple pour tester rapidement sans Streamlit
+    # Simple CLI mode for quick testing without Streamlit
     bot = FAQChatbot()
-    print("=== Chatbot FAQ (CLI) — tapez 'quit' pour quitter ===")
+    print("=== FAQ Chatbot (CLI) — type 'quit' to exit ===")
     while True:
-        q = input("\nVous: ")
+        q = input("\nYou: ")
         if q.strip().lower() in {"quit", "exit"}:
             break
         answer, matched, score = bot.get_response(q)

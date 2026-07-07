@@ -1,32 +1,31 @@
 # CodeAlpha_FAQChatbot
 
-Chatbot de réponse aux questions fréquentes (FAQ), réalisé dans le cadre du stage
-Artificial Intelligence chez **CodeAlpha** (Task 2).
+FAQ chatbot built as part of the **CodeAlpha** Artificial Intelligence internship (Task 2).
 
-## 🎯 Fonctionnement
+## 🎯 How it works
 
-1. Une base de FAQ (questions/réponses) est chargée depuis `data/faqs.json`.
-2. Chaque question est prétraitée avec **NLTK** : nettoyage du texte, tokenisation,
-   suppression des mots vides (stopwords), lemmatisation.
-3. Les questions sont vectorisées avec un **TF-IDF hybride** :
-   - un vectoriseur au niveau des mots (unigrammes + bigrammes),
-   - un vectoriseur au niveau des n-grammes de caractères (3 à 5),
-   pour être plus robuste face aux variations morphologiques (ex: *pay* / *payment*).
-4. La question de l'utilisateur est comparée à toutes les questions de la FAQ via la
-   **similarité cosinus** (moyenne des deux similarités ci-dessus).
-5. La réponse associée à la question la plus proche est renvoyée, si le score dépasse
-   un seuil de confiance (sinon un message de repli est affiché).
+1. A FAQ knowledge base (questions/answers) is loaded from `data/faqs.json`.
+2. Each question is preprocessed with **NLTK**: text cleaning, tokenization,
+   stopword removal, lemmatization.
+3. Questions are vectorized using a **hybrid TF-IDF** approach:
+   - a word-level vectorizer (unigrams + bigrams),
+   - a character n-gram vectorizer (3 to 5 characters),
+   to be more robust to morphological variations (e.g. *pay* / *payment*).
+4. The user's question is compared to all FAQ questions using **cosine similarity**
+   (average of both similarities above).
+5. The answer linked to the closest question is returned, if the score is above
+   a confidence threshold (otherwise a fallback message is shown).
 
-## 📁 Structure du projet
+## 📁 Project structure
 
 ```
 CodeAlpha_FAQChatbot/
-├── app.py              # Interface utilisateur Streamlit (chat)
-├── chatbot.py          # Moteur du chatbot (TF-IDF + cosine similarity) + mode CLI
-├── preprocessing.py     # Pipeline NLP (NLTK)
-├── setup_nltk.py        # Script pour télécharger les ressources NLTK
+├── app.py              # Streamlit chat UI
+├── chatbot.py          # Chatbot engine (TF-IDF + cosine similarity) + CLI mode
+├── preprocessing.py     # NLP pipeline (NLTK)
+├── setup_nltk.py        # Script to download required NLTK resources
 ├── data/
-│   └── faqs.json        # Base de connaissances (30 questions/réponses e-commerce)
+│   └── faqs.json        # Knowledge base (30 e-commerce Q&A pairs)
 ├── requirements.txt
 └── README.md
 ```
@@ -34,48 +33,48 @@ CodeAlpha_FAQChatbot/
 ## 🚀 Installation
 
 ```bash
-git clone https://github.com/<votre-user>/CodeAlpha_FAQChatbot.git
+git clone https://github.com/Ado-2k8/CodeAlpha_FAQChatbot.git
 cd CodeAlpha_FAQChatbot
 pip install -r requirements.txt
 python setup_nltk.py
 ```
 
-## ▶️ Utilisation
+## ▶️ Usage
 
-### Interface web (Streamlit)
+### Web interface (Streamlit)
 ```bash
 streamlit run app.py
 ```
-Puis ouvrez le lien affiché (par défaut http://localhost:8501).
+Then open the link shown in the terminal (default: http://localhost:8501).
 
-### Mode ligne de commande
+### Command-line mode
 ```bash
 python chatbot.py
 ```
 
-## 🧪 Exemple
+## 🧪 Example
 
 ```
-Vous: How do I cancel my order?
-Bot (0.72): You can cancel your order within 1 hour of placing it by contacting
+You: How do I cancel my order?
+Bot (1.00): You can cancel your order within 1 hour of placing it by contacting
             our support team or from your order history page.
 ```
 
-## 🛠️ Stack technique
+## 🛠️ Tech stack
 
 - Python 3
-- NLTK (préprocessing NLP)
+- NLTK (NLP preprocessing)
 - scikit-learn (TF-IDF, cosine similarity)
-- Streamlit (interface utilisateur)
+- Streamlit (user interface)
 
-## 📌 Limites connues
+## 📌 Known limitations
 
-Le matching est purement lexical (TF-IDF). Il ne comprend pas les synonymes
-totalement différents (ex: "money back" vs "refund policy" sans mot commun).
-Une amélioration possible serait d'utiliser des embeddings sémantiques
-(ex: `sentence-transformers`) pour un matching basé sur le sens plutôt que
-sur les mots exacts.
+Matching is purely lexical (TF-IDF). It doesn't understand fully different
+synonyms with no shared words (e.g. "money back" vs "refund policy").
+A possible improvement would be to use semantic embeddings
+(e.g. `sentence-transformers`) for meaning-based matching instead of
+exact-word matching.
 
-## 👤 Auteur
+## 👤 Author
 
-Projet réalisé dans le cadre du stage AI Internship — CodeAlpha (2026).
+Project built as part of the AI Internship — CodeAlpha (2026).
