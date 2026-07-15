@@ -1,0 +1,12 @@
+[
+  {
+    "role": "user",
+    "content": "how do i cancel my order"
+  },
+  {
+    "role": "assistant",
+    "content": "You can cancel your order within 1 hour of placing it by contacting our support team or from your order history page.",
+    "score": 1.0,
+    "matched_question": "How do I cancel my order?"
+  }
+]
