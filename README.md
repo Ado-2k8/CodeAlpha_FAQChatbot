@@ -52,7 +52,7 @@ Then open the link shown in the terminal (default: http://localhost:8501).
 python chatbot.py
 ```
 
-## 🧪 Example
+## Example
 
 ```
 You: How do I cancel my order?
@@ -60,7 +60,7 @@ Bot (1.00): You can cancel your order within 1 hour of placing it by contacting
             our support team or from your order history page.
 ```
 
-## 🛠️ Tech stack
+## Tech stack
 
 - Python 3
 - NLTK (NLP preprocessing)
